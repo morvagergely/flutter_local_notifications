@@ -134,6 +134,8 @@ public class FlutterLocalNotificationsPlugin: NSObject, FlutterPlugin, UNUserNot
             cancelAll(result)
         case "pendingNotificationRequests":
             pendingNotificationRequests(result)
+        case "getActiveNotifications":
+            getActiveNotifications(result)
         case "show":
             show(call, result)
         case "zonedSchedule":
@@ -225,6 +227,25 @@ public class FlutterLocalNotificationsPlugin: NSObject, FlutterPlugin, UNUserNot
     func pendingNotificationRequests(_ result: @escaping FlutterResult) {
         if #available(OSX 10.14, *) {
             UNUserNotificationCenter.current().getPendingNotificationRequests { (requests) in
+                var requestDictionaries: [[String: Any?]] = []
+                for request in requests {
+                    requestDictionaries.append([MethodCallArguments.id: Int(request.identifier) as Any, MethodCallArguments.title: request.content.title, MethodCallArguments.body: request.content.body, MethodCallArguments.payload: request.content.userInfo[MethodCallArguments.payload]])
+                }
+                result(requestDictionaries)
+            }
+        } else {
+            var requestDictionaries: [[String: Any?]] = []
+            let center = NSUserNotificationCenter.default
+            for scheduledNotification in center.scheduledNotifications {
+                requestDictionaries.append([MethodCallArguments.id: Int(scheduledNotification.identifier!) as Any, MethodCallArguments.title: scheduledNotification.title, MethodCallArguments.body: scheduledNotification.informativeText, MethodCallArguments.payload: scheduledNotification.userInfo![MethodCallArguments.payload]])
+            }
+            result(requestDictionaries)
+        }
+    }
+
+    func getActiveNotifications(_ result: @escaping FlutterResult) {
+        if #available(OSX 10.14, *) {
+            UNUserNotificationCenter.current().getDeliveredNotifications { (requests) in
                 var requestDictionaries: [[String: Any?]] = []
                 for request in requests {
                     requestDictionaries.append([MethodCallArguments.id: Int(request.identifier) as Any, MethodCallArguments.title: request.content.title, MethodCallArguments.body: request.content.body, MethodCallArguments.payload: request.content.userInfo[MethodCallArguments.payload]])

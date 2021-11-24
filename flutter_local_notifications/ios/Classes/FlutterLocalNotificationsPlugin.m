@@ -277,7 +277,8 @@ static FlutterError *getFlutterError(NSError *error) {
   } else {
     result([FlutterError
       errorWithCode:GET_ACTIVE_NOTIFICATIONS_ERROR_CODE
-            message:GET_ACTIVE_NOTIFICATIONS_ERROR_MESSAGE]);
+            message:GET_ACTIVE_NOTIFICATIONS_ERROR_MESSAGE
+            details:[NSNull null]]);
   }
 }
 

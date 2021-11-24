@@ -80,8 +80,14 @@ class MethodChannelFlutterLocalNotificationsPlugin
         await _channel.invokeListMethod('getActiveNotifications');
     return activeNotifications
             // ignore: always_specify_types
-            ?.map((p) => ActiveNotification(p['id'], p['channelId'],
-                p['groupKey'], p['title'], p['body'], p['payload']))
+            ?.map((p) => ActiveNotification(
+                  id: p['id'],
+                  channelId: p['channelId'],
+                  groupKey: p['groupKey'],
+                  title: p['title'],
+                  body: p['body'],
+                  payload: p['payload'],
+                ))
             .toList() ??
         <ActiveNotification>[];
   }
@@ -406,26 +412,6 @@ class AndroidFlutterLocalNotificationsPlugin
   /// This method is only applicable to Android versions 8.0 or newer.
   Future<void> deleteNotificationChannel(String channelId) =>
       _channel.invokeMethod('deleteNotificationChannel', channelId);
-
-  /// Returns the list of active notifications shown by the application that
-  /// haven't been dismissed/removed.
-  ///
-  /// This method is only applicable to Android 6.0 or newer and will throw an
-  /// [PlatformException] when called on a device with an incompatible Android
-  /// version.
-  Future<List<ActiveNotification>?> getActiveNotifications() async {
-    final List<Map<dynamic, dynamic>>? activeNotifications =
-        await _channel.invokeListMethod('getActiveNotifications');
-    return activeNotifications
-        // ignore: always_specify_types
-        ?.map((a) => ActiveNotification(
-              a['id'],
-              a['channelId'],
-              a['title'],
-              a['body'],
-            ))
-        .toList();
-  }
 
   /// Returns the list of all notification channels.
   ///

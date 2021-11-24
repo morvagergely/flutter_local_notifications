@@ -248,7 +248,7 @@ public class FlutterLocalNotificationsPlugin: NSObject, FlutterPlugin, UNUserNot
             UNUserNotificationCenter.current().getDeliveredNotifications { (requests) in
                 var requestDictionaries: [[String: Any?]] = []
                 for request in requests {
-                    requestDictionaries.append([MethodCallArguments.id: Int(request.identifier) as Any, MethodCallArguments.title: request.content.title, MethodCallArguments.body: request.content.body, MethodCallArguments.payload: request.content.userInfo[MethodCallArguments.payload]])
+                    requestDictionaries.append([MethodCallArguments.id: Int(request.request.identifier) as Any, MethodCallArguments.title: request.request.content.title, MethodCallArguments.body: request.request.content.body, MethodCallArguments.payload: request.request.content.userInfo[MethodCallArguments.payload]])
                 }
                 result(requestDictionaries)
             }

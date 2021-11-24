@@ -35,6 +35,10 @@ public class FlutterLocalNotificationsPlugin: NSObject, FlutterPlugin, UNUserNot
         static let threadIdentifier = "threadIdentifier"
     }
 
+    struct ErrorMessages {
+        static let getActiveNotificationsErrorMessage = @"MacOS version must be 10.14 or newer to use getActiveNotifications";
+    }
+
     struct DateFormatStrings {
         static let isoFormat = "yyyy-MM-dd'T'HH:mm:ss"
     }
@@ -253,12 +257,7 @@ public class FlutterLocalNotificationsPlugin: NSObject, FlutterPlugin, UNUserNot
                 result(requestDictionaries)
             }
         } else {
-            var requestDictionaries: [[String: Any?]] = []
-            let center = NSUserNotificationCenter.default
-            for scheduledNotification in center.scheduledNotifications {
-                requestDictionaries.append([MethodCallArguments.id: Int(scheduledNotification.identifier!) as Any, MethodCallArguments.title: scheduledNotification.title, MethodCallArguments.body: scheduledNotification.informativeText, MethodCallArguments.payload: scheduledNotification.userInfo![MethodCallArguments.payload]])
-            }
-            result(requestDictionaries)
+            result(FlutterError.init(code: "getActiveNotifications_error", message: ErrorMessages.getActiveNotificationsErrorMessage, details: nil))
         }
     }
 
